@@ -1,0 +1,5 @@
+export {default as Hero} from './Hero'
+export {default as Sort} from './Sort'
+export {default as Main} from './Main'
+export {default as Footer} from './Footer'
+export {default as Copright} from './Copright'

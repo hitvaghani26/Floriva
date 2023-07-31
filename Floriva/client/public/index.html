@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    
+  
+    <title>Floriva</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- <audio id="audio" src="./music1.mp3"   controls/> -->
+  </body>
+  <script>
+    // var audio = document.getElementById("audio");
+    // audio.volume = 0.2;
+    
+window.addEventListener("load", () =>{
+    var canvas = document.getElementById("mycanvas");
+    if(canvas != null){ 
+        var ctx = canvas.getContext("2d");
+    function resizeCanvas() {
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight;
+    }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+
+   
+
+
+    function getRandomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+
+    class Left_leaf {
+        constructor() {
+            this.img_leaf = new Image();
+            this.img_leaf.onload = () => {
+                
+            };
+            this.img_leaf.src = Math.random()<0.5? "./leaf_vector.png":"threeleaf.png";
+            this.randomsizexy = Math.floor(getRandomInRange(15, 50))
+            this.x = 0;
+            this.y = Math.random() * 3*canvas.height/4 + canvas.height/4;
+            this.ynoise = 0.5;
+            this.Ynoisedy = 0.1;
+            this.sizedx = 0.1;
+            this.sizedy = 0.1;
+            this.rotatedz = getRandomInRange(0, Math.PI * 2);
+
+            this.intervalID = setInterval(() => {
+                this.Ynoisedy = Math.random() < 0.5 ? getRandomInRange(-0.3, -0.2) : getRandomInRange(0.2, 0.3);
+                // console.log(this.Ynoisedy);
+            }, 5000 / 2);
+        }
+
+
+
+        Draw_Update() {
+
+
+            this.rotatedz += getRandomInRange(0.001, 0.03);
+
+            this.ynoise += this.Ynoisedy;
+            this.sizedx += getRandomInRange(0.05, 0.01);
+            this.sizedy += getRandomInRange(0.05, 0.01);
+
+            this.x = this.x + 1;
+
+            this.sizeX = this.randomsizexy - this.sizedx;
+            this.sizeY = this.randomsizexy - this.sizedy;
+            ctx.save();
+            ctx.translate(this.x, this.y + this.ynoise);
+            ctx.rect(0, 0, 20, 20);
+            ctx.rotate(this.rotatedz);
+            ctx.drawImage(this.img_leaf, 0 - this.sizeX / 2, 0 - this.sizeY / 2, this.sizeX, this.sizeY);
+            ctx.restore();
+
+            if (this.x > canvas.width || this.x < 0 || this.sizeX < 7|| this.sizeY < 7) {
+                this.x = 0;
+                this.y = Math.random() * 3*canvas.height/4 + canvas.height/4;
+                this.sizedx = 0.1;
+                this.sizedy = 0.1;
+            }
+
+            if (this.y > canvas.height || this.y < 0) {
+                this.Ynoisedy = -this.Ynoisedy;
+            }
+        }
+    }
+    var Left_arrayOfLeaf = [];
+    var Right_arrayOfLeaf = [];
+
+    class Right_leaf {
+        constructor() {
+            this.img_leaf = new Image();
+            this.img_leaf.onload = () => {
+               
+            };
+            this.img_leaf.src =  Math.random()<0.5? "./leaf_vector.png":"threeleaf.png";
+            this.randomsizexy = Math.floor(getRandomInRange(15, 50))
+            this.x = canvas.width;
+            this.y = Math.random() * 3*canvas.height/4 + canvas.height/4;
+            this.ynoise = 0.5;
+            this.Ynoisedy = 0.1;
+            this.sizedx = 0.1;
+            this.sizedy = 0.1;
+            this.rotatedz = getRandomInRange(0, Math.PI * 2);
+
+            this.intervalID = setInterval(() => {
+                this.Ynoisedy = Math.random() < 0.5 ? getRandomInRange(-0.3, -0.2) : getRandomInRange(0.2, 0.3);
+                // console.log(this.Ynoisedy);
+            }, 5000 / 2);
+        }
+
+
+
+        Draw_Update() {
+
+
+            this.rotatedz += getRandomInRange(0.001, 0.03);
+
+            this.ynoise += this.Ynoisedy;
+            this.sizedx += getRandomInRange(0.05, 0.01);
+            this.sizedy += getRandomInRange(0.05, 0.01);
+
+            this.x = this.x - 1;
+
+            this.sizeX = this.randomsizexy - this.sizedx;
+            this.sizeY = this.randomsizexy - this.sizedy;
+            ctx.save();
+            ctx.translate(this.x, this.y + this.ynoise);
+            ctx.rect(0, 0, 20, 20);
+            ctx.rotate(this.rotatedz);
+            ctx.drawImage(this.img_leaf, 0 - this.sizeX / 2, 0 - this.sizeY / 2, this.sizeX, this.sizeY);
+            ctx.restore();
+
+            if ( this.x < 0 || this.sizeX < 7 || this.sizeY < 7) {
+                this.x = canvas.width;
+                this.y = Math.random() * 3*canvas.height/4 + canvas.height/4;
+                this.sizedx = 0.1;
+                this.sizedy = 0.1;
+            }
+
+            if (this.y > canvas.height || this.y < 0) {
+                this.Ynoisedy = -this.Ynoisedy;
+            }
+        }
+    }
+    var Left_numberofleaf = Math.floor(getRandomInRange(15, 25));
+    var Right_numberofleaf = Math.floor(getRandomInRange(15, 25));
+    
+    function Left_init(arr, num) {
+        for (let i = 0; i < num; i++) {
+            setTimeout(() => {
+                arr[arr.length] = new Left_leaf();
+            }, Math.floor(getRandomInRange(500, 10000)));
+        }
+    }
+    Left_init(Left_arrayOfLeaf, Left_numberofleaf);
+    
+    function Right_init(arr, num) {
+        for (let i = 0; i < num; i++) {
+            setTimeout(() => {
+                arr[arr.length] = new Right_leaf();
+                // console.log(Right_arrayOfLeaf);
+            }, Math.floor(getRandomInRange(500, 10000)));
+        }
+    }
+    Right_init(Right_arrayOfLeaf, Right_numberofleaf)
+
+
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < Left_arrayOfLeaf.length; i++) {
+            Left_arrayOfLeaf[i].Draw_Update();
+
+        }
+        for (let i = 0; i < Right_arrayOfLeaf.length; i++) {
+            Right_arrayOfLeaf[i].Draw_Update();
+
+        }
+
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+    }
+    
+    
+})
+
+       
+    </script>
+</html>
